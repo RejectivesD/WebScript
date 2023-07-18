@@ -1,12 +1,14 @@
 // ==UserScript==
 // @name         BetterVideoPlayer
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.01-Beta
 // @description  网页视频自动播放和声音调节
 // @author       MemoliPoi
 // @match        *://www.bilibili.com/video/*
 // @match        *://v.qq.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=jianshu.com
+// @updateURL    https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
+// @downloadURL  https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_registerMenuCommand
