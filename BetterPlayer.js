@@ -1,16 +1,18 @@
 // ==UserScript==
 // @name         BetterVideoPlayer
 // @namespace    http://tampermonkey.net/
-// @version      1.01-Beta
+// @version      1.02-Alpha
 // @description  网页视频自动播放和声音调节
 // @author       MemoliPoi
 // @match        *://www.bilibili.com/video/*
 // @match        *://v.qq.com/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=jianshu.com
+// @match        *://www.iqiyi.com/*
+// @match        *://v.youku.com/v_show/*
+// @icon         https://www.bing.com/images/search?q=%E8%80%B3%E6%9C%B5%E5%9B%BE%E6%A0%87&form=IQFRBA&id=2979DB9AD08E0689CED580BF5960C50D99FD191D&first=1&disoverlay=1
 // @updateURL    https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
-// @downloadURL  https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
 // ==/UserScript==
 
@@ -25,6 +27,25 @@
   //创建音频增益节点
   const gainNode = audioCtx.createGain();
   gainNode.gain.value = 1;
+  //灰度样式
+  const grayFilter=['-webkit-filter: grayscale(100%)',
+    ' -moz-filter: grayscale(100%)','-ms-filter: grayscale(100%)','-o-filter: grayscale(100%)',
+    'filter: grayscale(100%)','-webkit-filter: gray','-webkit-filter: progid:dximagetransform.microsoft.basicimage(grayscale=1)',
+    'filter: progid:dximagetransform.microsoft.basicimage(grayscale=1)'
+  ]
+  //清除灰度样式
+  const clearGray=`
+    body{
+      -webkit-filter: grayscale(0%)';
+      -moz-filter: grayscale(0%);
+      -ms-filter: grayscale(0%);
+      -o-filter: grayscale(0%);
+      filter: grayscale(0%);
+      -webkit-filter: none;
+      -webkit-filter: progid:dximagetransform.microsoft.basicimage(grayscale=0);
+      filter: progid:dximagetransform.microsoft.basicimage(grayscale=0)
+    }
+  `
   let userCustomer = {
     protect: true, //护耳模式
     protectVolume: 0.15, //护耳模式下整体音量
@@ -32,6 +53,7 @@
     beQuiet:false,//强制静音
     quietVal:0.3,//音量增益
     AutoPlay: true,//自动播放
+    checkGray:false,//清除灰度
   };
 
   const customerKey = {
@@ -39,22 +61,26 @@
     protect_vol: "protect_vol",
     quiet_vol: "quiet_vol",
     auto_Play: "auto_Play",
+    check_Gray: "check_Gray",
   };
 
+  //#region 方法
   /**
    * @description 脚本启动时确定初始化
-   * @returns {{Protect:boolean,ProVol:Number,AutoPlay:boolean,BeQuiet:boolean}}
+   * @returns {{Protect:boolean,ProVol:Number,AutoPlay:boolean,BeQuiet:boolean,CheckGray:boolean}}
    */
   const UserCustomerInit = () => {
     let protect=GM_getValue(customerKey.protect_key, userCustomer.protect);
     let protectVolume=GM_getValue(customerKey.protect_vol, userCustomer.protectVolume);
     let autoPlay=GM_getValue(customerKey.protect_key, userCustomer.AutoPlay);
     let beQuiet = GM_getValue(customerKey.quiet_vol,userCustomer.beQuiet)
+    let checkGray = GM_getValue(customerKey.check_Gray,userCustomer.checkGray)
     return {
       Protect: protect,
       ProVol: protectVolume,
       AutoPlay: autoPlay,
-      BeQuiet:beQuiet
+      BeQuiet:beQuiet,
+      CheckGray:checkGray
     };
   };
 
@@ -138,8 +164,43 @@
       }
     }
   };
-  document.onreadystatechange = AutoPlayVideo;
 
+  /**
+   * @description 检查页面是否处于灰色滤镜
+   * @returns 当前页面是否处于灰色滤镜中
+   */
+  const CheckWebGray=()=>{
+    const body = document.body
+    let styleOnBody = body.style
+    if(Array.isArray(styleOnBody)&&styleOnBody.length>0){
+      for (let i = 0; i < grayFilter.length; i++) {
+          if(Object.hasOwn(styleOnBody,grayFilter[i])){
+            return true
+          }
+      }
+      return false;
+    }
+    return false;
+  }
+
+  //清除灰度
+  const ClearWebGray=()=>{
+    if(CheckWebGray()){
+      console.log("当前页面处于灰度，已修正")
+      GM_addStyle(clearGray)
+    }
+    console.log("当前页面色彩正常")
+  }
+
+  //#endregion
+  document.onreadystatechange = function(){
+      AutoPlayVideo();
+      if(UserCustomerInit().CheckGray){
+        ClearWebGray()
+      }
+  };
+
+  //#region 菜单
   const NeedProtect=GM_registerMenuCommand(`护耳模式${UserCustomerInit().Protect?"已开启":"已关闭"}`,(e)=>{
     const customer = UserCustomerInit()
     GM_setValue(customerKey.protect_key,customer.Protect?false:true)
@@ -156,5 +217,15 @@
        GM_setValue(customerKey.protect_key,false)
     }
   })
+
+  const NeedClearGray=GM_registerMenuCommand(`清除页面灰度${UserCustomerInit().CheckGray?'已开启':'已关闭'}`,e=>{
+    let res=confirm('页面灰色是为了铭记，你确定真的要清灰吗,刷新页面生效')
+    if(res){
+      const customer = UserCustomerInit()
+      GM_setValue(customerKey.check_Gray,customer.BeQuiet?false:true)
+    }
+  })
+
+  //#endregion
 
 })();
