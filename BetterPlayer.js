@@ -10,6 +10,7 @@
 // @match        *://v.youku.com/v_show/*
 // @icon         https://www.bing.com/images/search?q=%E8%80%B3%E6%9C%B5%E5%9B%BE%E6%A0%87&form=IQFRBA&id=2979DB9AD08E0689CED580BF5960C50D99FD191D&first=1&disoverlay=1
 // @updateURL    https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
+// @downloadURL  https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
