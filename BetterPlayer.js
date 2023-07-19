@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         BetterVideoPlayer
+// @name         更好的自动播放(BetterVideoPlayer)
 // @namespace    http://tampermonkey.net/
-// @version      1.03-Beta
-// @description  网页视频自动播放和声音调节，并设有页面灰度调整
+// @version      1.04-Alpha
+// @description  网页视频自动播放和声音调节，并设有页面灰度调整,使用该脚本时，请关闭网站的视频自动播放设置，暂时对腾讯视频以及直播平台无效
 // @author       MemoliPoi
 // @match        *://www.bilibili.com/video/*
 // @match        *://v.qq.com/*
 // @match        *://www.iqiyi.com/*
 // @match        *://v.youku.com/v_show/*
-// @icon         https://www.bing.com/images/search?q=%E8%80%B3%E6%9C%B5%E5%9B%BE%E6%A0%87&form=IQFRBA&id=2979DB9AD08E0689CED580BF5960C50D99FD191D&first=1&disoverlay=1
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=bilibili.com
 // @updateURL    https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
 // @downloadURL  https://github.com/RejectivesD/WebScript/blob/main/BetterPlayer.js
 // @grant        GM_getValue
