@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         BetterVideoPlayer
 // @namespace    http://tampermonkey.net/
-// @version      1.02-Alpha
-// @description  网页视频自动播放和声音调节
+// @version      1.03-Beta
+// @description  网页视频自动播放和声音调节，并设有页面灰度调整
 // @author       MemoliPoi
 // @match        *://www.bilibili.com/video/*
 // @match        *://v.qq.com/*
